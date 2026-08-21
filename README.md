@@ -90,7 +90,7 @@ All settings live under the `vesiro.*` namespace and go in
 | `vesiro.warn` | boolean | `true` | dynamic | Add a response `Warning` header when a request falls back or the native engine is unavailable. |
 | `vesiro.memory_mode` | `IO_BOUND` \| `REGULAR` | `IO_BOUND` | node-static | What the engine optimizes for: nodes whose I/O is under stress, or hot nodes with plenty of RAM. See [Performance tuning](#performance-tuning). |
 | `vesiro.max_clause_count` | integer | `-1` | node-static | Override the boolean clause limit. `-1` keeps the engine default. |
-| `vesiro.telemetry` | boolean | `false` | dynamic | Send native crash and fallback telemetry to Vesiro. |
+| `vesiro.telemetry` | boolean | `true` | dynamic | Send native crash and fallback telemetry to Vesiro. |
 
 ---
 
