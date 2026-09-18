@@ -23,7 +23,9 @@ hot path changes.
 - [Per-request control](#per-request-control)
 - [Performance tuning](#performance-tuning)
 - [Elasticsearch and system configuration](#elasticsearch-and-system-configuration)
+- [Logging](#logging)
 - [Transparent fallback](#transparent-fallback)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -224,6 +226,40 @@ sudo swapoff -a
 
 ---
 
+## Logging
+
+Vesiro writes to your normal Elasticsearch log. All Vesiro loggers sit under `com.vesiro`, so you
+can raise or lower Vesiro's log level on its own, using the standard Elasticsearch log settings.
+
+On a healthy node Vesiro logs one line at startup and is otherwise quiet.
+
+### Enable debug logging
+
+Takes effect immediately, no restart needed:
+
+```
+PUT _cluster/settings
+{"transient": {"logger.com.vesiro": "DEBUG"}}
+```
+
+### Turn it off again
+
+```
+PUT _cluster/settings
+{"transient": {"logger.com.vesiro": null}}
+```
+
+Use `null` rather than `INFO`. Setting `INFO` pins the level instead of restoring the default.
+
+To keep a level across restarts, use `persistent` instead of `transient`, or set it in
+`elasticsearch.yml`:
+
+```yaml
+logger.com.vesiro: debug
+```
+
+---
+
 ## Transparent fallback
 
 VesiroSearch is designed so that **a request never fails because of the
@@ -238,12 +274,32 @@ response header:
 Warning: 299 Elasticsearch-8.17.5 "Request not supported in VesiroSearch. Fallback triggered: ..."
 ```
 
+The same message is written to the log. To see it there, enable
+[debug logging](#logging), run the query again, and look for:
+
+```
+Request not supported in VesiroSearch. Fallback triggered:
+```
+
 This makes fallbacks observable rather than silent. Watch for them during
 rollout: a query that always falls back gets no benefit from the plugin, and
-the header tells you why.
+the message tells you why.
 
 Fallback also applies to unexpected native errors: the error is logged and the
 request is retried through the standard path.
+
+---
+
+## Troubleshooting
+
+### No performance improvement
+
+If queries are no faster than before, Vesiro may be falling back to Elasticsearch instead of
+running them natively. See [Transparent fallback](#transparent-fallback) for how to spot a
+fallback.
+
+Each fallback means that query used something Vesiro does not run natively, so Elasticsearch
+handled it. Results are still correct, but those queries get no speedup.
 
 ---
 
