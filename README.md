@@ -14,6 +14,7 @@ VesiroSearch is a plugin that intercepts the query phase and executes it in a pu
 
 - [Compatibility](#compatibility)
 - [Getting started](#getting-started)
+  - [Create an account and download the plugin](#create-an-account-and-download-the-plugin)
   - [Installation](#installation)
   - [Verifying the install](#verifying-the-install)
 - [Advanced settings](#advanced-settings)
@@ -35,13 +36,13 @@ VesiroSearch is a plugin that intercepts the query phase and executes it in a pu
 
 ## Getting started
 
-### Installation
-
-#### 1. Create an account and download the plugin
+### Create an account and download the plugin
 
 Create a Vesiro account at <DOWNLOAD_URL>. Once signed in, download the plugin zip that matches your exact Elasticsearch version.
 
-#### 2. Install the plugin on a node
+### Installation
+
+#### 1. Install the plugin on a node
 
 VesiroSearch ships as a standard plugin zip. It doesn't have to be on every node in the cluster, but only nodes with the plugin installed run searches through VesiroSearch.
 
@@ -51,37 +52,36 @@ Copy the zip to the node, then run this from the Elasticsearch home directory:
 bin/elasticsearch-plugin install file:///path/to/vesiro-<version>.zip
 ```
 
+<details>
+<summary>Finding the Elasticsearch home directory</summary>
+
+Ask the running node:
+
+```bash
+curl -s 'localhost:9200/_nodes/settings?filter_path=nodes.*.settings.path.home&pretty'
+```
+
+</details>
+
 The installer asks you to confirm the extra permissions the plugin needs. Answer `y`, or pass `--batch` to skip the prompt.
 
-#### 3. Restart the node
+#### 2. Restart the node
 
 ```bash
 systemctl restart elasticsearch   # or however you manage the service
 ```
 
-Repeat steps 2 and 3 on each node where you want the speedup, one node at a time. Nodes with and without the plugin can run side by side in the same cluster; nodes without it serve searches through the standard query phase.
+Repeat steps 1 and 2 on each node where you want the speedup, one node at a time. Nodes with and without the plugin can run side by side in the same cluster; nodes without it serve searches through the standard query phase.
 
 ### Verifying the install
 
 VesiroSearch exposes a single informational endpoint:
 
 ```bash
-curl -s localhost:9200/_vesiro
+curl -i localhost:9200/_vesiro
 ```
 
-```json
-{
-  "vsl_version": "1a2b3c4d5",
-  "vsl": {
-    "branch": "main",
-    "commit": "1a2b3c4d5",
-    "dirty": false,
-    "features": []
-  }
-}
-```
-
-`vsl_version` is the commit the plugin was built from. A successful response means the native library loaded, the license is valid, and the engine is answering calls. If the endpoint 404s, the plugin isn't installed or the node didn't restart.
+If it returns `200` with version data, the plugin is installed and running. If it returns `400` with `invalid_index_name_exception`, the plugin isn't installed or the node didn't restart.
 
 ---
 
