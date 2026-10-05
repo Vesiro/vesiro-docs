@@ -2,7 +2,7 @@
 
 **A drop-in native search engine for Elasticsearch.**
 
-VesiroSearch is a plugin that intercepts the query phase and executes it in a purpose-built C++ search engine instead of the standard Java/Lucene pipeline. We also offer a new index data structure that can increase performance even further. Your indices, mappings, queries, and clients stay exactly the same. Only the hot path changes.
+VesiroSearch is a plugin that intercepts the query phase and executes it in a purpose-built C++ search engine instead of the standard Java/Lucene pipeline. Your indices, mappings, queries, and clients stay exactly the same. Only the hot path changes.
 
 - **Drop-in.** No reindexing, no query rewrites, no client changes. Install the plugin and restart.
 - **Transparent fallback.** Anything VesiroSearch can't execute natively is silently handed back to the standard query phase, so a request never fails because of the plugin.
@@ -38,19 +38,21 @@ VesiroSearch is a plugin that intercepts the query phase and executes it in a pu
 
 ### Create an account and download the plugin
 
-Create a Vesiro account at <DOWNLOAD_URL>. Once signed in, download the plugin zip that matches your exact Elasticsearch version.
+Create a Vesiro account at <DOWNLOAD_URL>. Once signed in, download the plugin zip that matches your Elasticsearch version.
 
 ### Installation
 
 #### 1. Install the plugin on a node
 
-VesiroSearch ships as a standard plugin zip. It doesn't have to be on every node in the cluster, but only nodes with the plugin installed run searches through VesiroSearch.
+VesiroSearch ships as a standard plugin zip. It doesn't have to be on every node in the cluster, but only nodes with the plugin get the benefit.
 
 Copy the zip to the node, then run this from the Elasticsearch home directory:
 
 ```bash
 bin/elasticsearch-plugin install file:///path/to/vesiro-<version>.zip
 ```
+
+The installer asks you to confirm the extra permissions the plugin needs. Answer `y`, or pass `--batch` to skip the prompt.
 
 <details>
 <summary>Finding the Elasticsearch home directory</summary>
@@ -63,7 +65,6 @@ curl -s 'localhost:9200/_nodes/settings?filter_path=nodes.*.settings.path.home&p
 
 </details>
 
-The installer asks you to confirm the extra permissions the plugin needs. Answer `y`, or pass `--batch` to skip the prompt.
 
 #### 2. Restart the node
 
