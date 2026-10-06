@@ -116,7 +116,7 @@ Request not supported in VesiroSearch. Fallback triggered:
 
 This makes fallbacks observable. Watch for them during rollout: a query that always falls back gets no benefit from the plugin.
 
-Fallback also applies to unexpected errors: the error is logged and the request is retried through the elastic search.
+Fallback also applies to unexpected errors: the error is logged and the request is retried through standard Elasticsearch.
 
 ---
 
