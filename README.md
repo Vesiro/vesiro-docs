@@ -126,7 +126,7 @@ when do we get the best speedups and customer value...
 ## When is Vesiro not appropriate
 for whom is it useless, for example very fast queries. Small clusters, 
 
-## Known limitations
+## Known limitations and unsupported queries
 parts of painless, ...?
 
 ## Data sent to Vesiro
