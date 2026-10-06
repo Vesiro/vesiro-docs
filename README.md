@@ -32,6 +32,12 @@ VesiroSearch is a plugin that intercepts the query phase and executes it in a pu
 | **Operating system** | Linux |
 | **Architecture** | x86_64 |
 
+## System requirements
+data nodes need at least 8 GB free RAM outside the JVM heap, otherwise a startup warning is logged
+
+## Network requirements
+outbound access to license.vesiro.dev:50051, no proxy support
+
 ---
 
 ## Getting started
@@ -84,17 +90,11 @@ curl -i localhost:9200/_vesiro
 
 If it returns `200` with version data, the plugin is installed and running. If it returns `400` with `invalid_index_name_exception`, the plugin isn't installed or the node didn't restart.
 
----
+## Upgrading
+each zip matches one exact Elasticsearch version, so upgrading Elasticsearch means reinstalling the matching zip
 
-## Advanced settings
-
-Settings, tuning and logging are documented in [advanced-settings.md](advanced-settings.md):
-
-- [Configuration](advanced-settings.md#configuration)
-- [Per-request control](advanced-settings.md#per-request-control)
-- [Performance tuning](advanced-settings.md#performance-tuning)
-- [Elasticsearch and system configuration](advanced-settings.md#elasticsearch-and-system-configuration)
-- [Logging](advanced-settings.md#logging)
+## Uninstalling and rolling back
+`bin/elasticsearch-plugin remove vesiro` and restart, indices written with a Vesiro codec need the rollback guide first
 
 ---
 
@@ -118,6 +118,30 @@ This makes fallbacks observable. Watch for them during rollout: a query that alw
 
 Fallback also applies to unexpected errors: the error is logged and the request is retried through standard Elasticsearch.
 
+## Our own performance increases
+some benchmarking data
+## When is Vesiro good
+when do we get the best speedups and customer value...
+
+## When is Vesiro not appropriate
+for whom is it useless, for example very fast queries. Small clusters, 
+
+## Known limitations and unsupported queries
+parts of painless, ...?
+
+## Data sent to Vesiro
+what the license connection always sends (node, cluster, hardware), and what `vesiro.telemetry` adds (fallback and error events)
+
+## Advanced settings
+
+Settings, tuning and logging are documented in [advanced-settings.md](advanced-settings.md):
+
+- [Configuration](advanced-settings.md#configuration)
+- [Per-request control](advanced-settings.md#per-request-control)
+- [Performance tuning](advanced-settings.md#performance-tuning)
+- [Elasticsearch and system configuration](advanced-settings.md#elasticsearch-and-system-configuration)
+- [Logging](advanced-settings.md#logging)
+
 ---
 
 ## Troubleshooting
@@ -127,6 +151,9 @@ Fallback also applies to unexpected errors: the error is logged and the request 
 If queries are no faster than before, Vesiro may be falling back to Elasticsearch instead of running them natively. See [Transparent fallback](#transparent-fallback) for how to spot a fallback.
 
 Each fallback means that query used something Vesiro does not run natively, so Elasticsearch handled it. Results are still correct, but those queries get no speedup.
+
+### License expired
+every search falls back and `/_vesiro` returns `500` with `authentication failed`
 
 ---
 
