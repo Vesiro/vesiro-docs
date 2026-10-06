@@ -105,7 +105,7 @@ VesiroSearch is designed so that **a request never fails because of the plugin**
 When `vesiro.warn` is enabled (the default), those requests also carry a response header:
 
 ```
-Warning: 299 Elasticsearch-8.17.5 "Request not supported in VesiroSearch. Fallback triggered: ..."
+Warning: 299 Elasticsearch-8.17.5-<build hash> "Request not supported in VesiroSearch. Fallback triggered: ..."
 ```
 
 The same message is written to the log, at `WARN` for unexpected errors and at `DEBUG` for unsupported requests. To see the `DEBUG` ones, enable [debug logging](advanced-settings.md#logging), run the query again, and look for:
@@ -114,9 +114,9 @@ The same message is written to the log, at `WARN` for unexpected errors and at `
 Request not supported in VesiroSearch. Fallback triggered:
 ```
 
-This makes fallbacks observable rather than silent. Watch for them during rollout: a query that always falls back gets no benefit from the plugin, and the message tells you why.
+This makes fallbacks observable. Watch for them during rollout: a query that always falls back gets no benefit from the plugin.
 
-Fallback also applies to unexpected native errors: the error is logged and the request is retried through the standard path.
+Fallback also applies to unexpected errors: the error is logged and the request is retried through the elastic search.
 
 ---
 
