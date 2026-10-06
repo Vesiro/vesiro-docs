@@ -14,7 +14,11 @@ Settings, tuning and logging for VesiroSearch. For installation, see the [README
 
 ## Configuration
 
-All settings live under the `vesiro.*` namespace and go in `elasticsearch.yml`.
+All settings live under the `vesiro.*` namespace. Set them in `elasticsearch.yml`, or with `-E` when starting the node ([Elasticsearch docs](https://www.elastic.co/guide/en/elasticsearch/reference/8.17/targz.html#targz-configuring)):
+
+```bash
+bin/elasticsearch -Evesiro.memory_mode=REGULAR
+```
 
 | Setting | Type | Default | Scope | Description |
 | --- | --- | --- | --- | --- |
@@ -23,6 +27,15 @@ All settings live under the `vesiro.*` namespace and go in `elasticsearch.yml`.
 | `vesiro.memory_mode` | `IO_BOUND` \| `REGULAR` | `IO_BOUND` | node-static | What the engine optimizes for: nodes whose I/O is under stress, or hot nodes with plenty of RAM. See [Performance tuning](#performance-tuning). |
 | `vesiro.max_clause_count` | integer | `-1` | node-static | Override the boolean clause limit. `-1` keeps the Elasticsearch default. |
 | `vesiro.telemetry` | boolean | `false` | node-static | Send fallback and error telemetry to Vesiro. |
+
+Settings marked dynamic can be changed on a running cluster without a restart ([Elasticsearch docs](https://www.elastic.co/guide/en/elasticsearch/reference/8.17/cluster-update-settings.html)):
+
+```
+PUT _cluster/settings
+{"persistent": {"vesiro.enabled": false}}
+```
+
+Node-static settings only take effect on restart; changing them this way returns an error.
 
 ---
 
