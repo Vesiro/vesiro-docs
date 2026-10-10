@@ -38,7 +38,7 @@ VesiroSearch is a plugin that intercepts the query phase and executes it in a pu
 
 ### Create an account and download the plugin
 
-Create a Vesiro account at <DOWNLOAD_URL>. Once signed in, download the plugin zip that matches your Elasticsearch version.
+Create a Vesiro account at [vesiro.com](https://account.vesiro.com). Once signed in, download the plugin zip that matches your Elasticsearch version.
 
 ### Installation
 
