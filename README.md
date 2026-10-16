@@ -28,7 +28,7 @@ VesiroSearch is a plugin that intercepts the query phase and executes it in a pu
 
 | | Supported |
 | --- | --- |
-| **Elasticsearch** | 8.13 – 8.17 |
+| **Elasticsearch** | 8.13 – 8.19 |
 | **Operating system** | Linux |
 | **Architecture** | x86_64 |
 
